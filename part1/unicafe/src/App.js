@@ -1,5 +1,32 @@
 import { useState } from "react";
 
+const Average = (props) => {
+  const avg = () => {
+    let wholescore = props.good * 1 + props.neutral * 0 + props.bad * -1;
+    return wholescore / props.total;
+  };
+  if (props.total !== 0) {
+    return (
+      <div>
+        {props.stats} {avg()}
+      </div>
+    );
+  }
+};
+
+const Positive = (props) => {
+  const percentage = () => {
+    return (props.good / props.total) * 100;
+  };
+  if (props.good !== 0) {
+    return (
+      <div>
+        {props.stats} {percentage()} %
+      </div>
+    );
+  }
+};
+
 const Feedback = (props) => {
   return (
     <div>
@@ -43,6 +70,15 @@ const App = () => {
       <Feedback feedback="good" value={good} />
       <Feedback feedback="neutral" value={neutral} />
       <Feedback feedback="bad" value={bad} />
+      <Feedback feedback="all" value={good + neutral + bad} />
+      <Average
+        stats="average"
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        total={good + neutral + bad}
+      />
+      <Positive stats="positive" good={good} total={good + neutral + bad} />
     </>
   );
 };
