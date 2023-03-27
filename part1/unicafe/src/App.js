@@ -1,5 +1,13 @@
 import { useState } from "react";
 
+const StaticLine = (props) => {
+  return (
+    <div>
+      {props.feedback} {props.value}
+    </div>
+  );
+};
+
 const Statistics = (props) => {
   const avg = () => {
     let wholescore = props.value1 * 1 + props.value2 * 0 + props.value3 * -1;
@@ -12,26 +20,14 @@ const Statistics = (props) => {
 
   if (props.total !== 0) {
     return (
-      <>
-        <div>
-          {props.feedback1} {props.value1}
-        </div>
-        <div>
-          {props.feedback2} {props.value2}
-        </div>
-        <div>
-          {props.feedback3} {props.value3}
-        </div>
-        <div>
-          {props.all} {props.total}
-        </div>
-        <div>
-          {props.average} {avg()}
-        </div>
-        <div>
-          {props.positive} {percentage()} %
-        </div>
-      </>
+      <div>
+        <StaticLine feedback={props.feedback1} value={props.value1} />
+        <StaticLine feedback={props.feedback2} value={props.value2} />
+        <StaticLine feedback={props.feedback3} value={props.value3} />
+        <StaticLine feedback={props.all} value={props.total} />
+        <StaticLine feedback={props.average} value={avg()} />
+        <StaticLine feedback={props.positive} value={percentage()} />
+      </div>
     );
   }
   return <div>No feedback given</div>;
