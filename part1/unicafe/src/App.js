@@ -73,10 +73,10 @@ const App = () => {
         feedback1="good"
         feedback2="neutral"
         feedback3="bad"
-        all="all"
         value1={good}
         value2={neutral}
         value3={bad}
+        all="all"
         total={good + neutral + bad}
         average="average"
         positive="positive"
