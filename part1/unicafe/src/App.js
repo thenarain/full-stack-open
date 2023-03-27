@@ -2,9 +2,13 @@ import { useState } from "react";
 
 const StaticLine = (props) => {
   return (
-    <div>
-      {props.feedback} {props.value}
-    </div>
+    <tbody>
+      <tr>
+        <td>{props.feedback}</td>
+        <td> {props.value}</td>
+        <td>{props.sign}</td>
+      </tr>
+    </tbody>
   );
 };
 
@@ -20,14 +24,14 @@ const Statistics = (props) => {
 
   if (props.total !== 0) {
     return (
-      <div>
+      <table>
         <StaticLine feedback={props.feedback1} value={props.value1} />
         <StaticLine feedback={props.feedback2} value={props.value2} />
         <StaticLine feedback={props.feedback3} value={props.value3} />
         <StaticLine feedback={props.all} value={props.total} />
         <StaticLine feedback={props.average} value={avg()} />
-        <StaticLine feedback={props.positive} value={percentage()} />
-      </div>
+        <StaticLine feedback={props.positive} value={percentage()} sign="%" />
+      </table>
     );
   }
   return <div>No feedback given</div>;
