@@ -1,38 +1,40 @@
 import { useState } from "react";
 
-const Average = (props) => {
+const Statistics = (props) => {
   const avg = () => {
-    let wholescore = props.good * 1 + props.neutral * 0 + props.bad * -1;
+    let wholescore = props.value1 * 1 + props.value2 * 0 + props.value3 * -1;
     return wholescore / props.total;
   };
+
+  const percentage = () => {
+    return (props.value1 / props.total) * 100;
+  };
+
   if (props.total !== 0) {
     return (
-      <div>
-        {props.stats} {avg()}
-      </div>
+      <>
+        <div>
+          {props.feedback1} {props.value1}
+        </div>
+        <div>
+          {props.feedback2} {props.value2}
+        </div>
+        <div>
+          {props.feedback3} {props.value3}
+        </div>
+        <div>
+          {props.all} {props.total}
+        </div>
+        <div>
+          {props.average} {avg()}
+        </div>
+        <div>
+          {props.positive} {percentage()} %
+        </div>
+      </>
     );
   }
-};
-
-const Positive = (props) => {
-  const percentage = () => {
-    return (props.good / props.total) * 100;
-  };
-  if (props.good !== 0) {
-    return (
-      <div>
-        {props.stats} {percentage()} %
-      </div>
-    );
-  }
-};
-
-const Feedback = (props) => {
-  return (
-    <div>
-      {props.feedback} {props.value}
-    </div>
-  );
+  return <div>No feedback given</div>;
 };
 
 const Display = (props) => {
@@ -67,18 +69,18 @@ const App = () => {
       <Button handleClick={handleNeutral} text="neutral" />{" "}
       <Button handleClick={handleBad} text="bad" />
       <Display heading="statistics" />
-      <Feedback feedback="good" value={good} />
-      <Feedback feedback="neutral" value={neutral} />
-      <Feedback feedback="bad" value={bad} />
-      <Feedback feedback="all" value={good + neutral + bad} />
-      <Average
-        stats="average"
-        good={good}
-        neutral={neutral}
-        bad={bad}
+      <Statistics
+        feedback1="good"
+        feedback2="neutral"
+        feedback3="bad"
+        all="all"
+        value1={good}
+        value2={neutral}
+        value3={bad}
         total={good + neutral + bad}
+        average="average"
+        positive="positive"
       />
-      <Positive stats="positive" good={good} total={good + neutral + bad} />
     </>
   );
 };
