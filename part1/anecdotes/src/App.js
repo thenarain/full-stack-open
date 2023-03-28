@@ -16,11 +16,30 @@ const Display = (props) => {
   );
 };
 
+const MostVotes = (props) => {
+  const maxVotes = () => {
+    return Math.max(...props.votes);
+  };
+
+  const maxIndex = () => {
+    return props.votes.indexOf(maxVotes());
+  };
+  if (Math.max(...props.votes) === 0) {
+    return <p>No votes given</p>;
+  }
+  return (
+    <>
+      <div>{props.array[maxIndex()]}</div>
+      <div>has {maxVotes()} votes</div>
+    </>
+  );
+};
+
 const Content = (props) => {
   return (
     <>
       <div>{props.content}</div>
-      <div>has {props.votes} votes</div>
+      <div>has {props.value} votes</div>
     </>
   );
 };
@@ -52,22 +71,14 @@ const App = () => {
     setVotes(updatedVotes);
   };
 
-  const maxVotes = () => {
-    return Math.max(...votes);
-  };
-
-  const maxIndex = () => {
-    return votes.indexOf(maxVotes());
-  };
-
   return (
     <>
       <Display heading="Anecdote of the day" />
-      <Content content={anecdotes[selected]} votes={votes[selected]} />
+      <Content content={anecdotes[selected]} value={votes[selected]} />
       <Button handler={handleVotes} text="votes" />
       <Button handler={handleClick} text="next anecdotes" />
       <Display heading="Anecdote with most votes" />
-      <Content content={anecdotes[maxIndex()]} votes={maxVotes()} />
+      <MostVotes array={anecdotes} votes={votes} />
     </>
   );
 };
