@@ -1,3 +1,11 @@
+const Total = ({ parts }) => {
+  let total = 0;
+  parts.forEach((part) => {
+    total += part.exercises;
+  });
+  return <h3>total of {total} exercises</h3>;
+};
+
 const Part = (props) => {
   return (
     <p>
@@ -7,9 +15,13 @@ const Part = (props) => {
 };
 
 const Content = ({ parts }) => {
-  return parts.map((part) => (
-    <Part key={part.id} name={part.name} exercise={part.exercises} />
-  ));
+  return (
+    <>
+      {parts.map((part) => (
+        <Part key={part.id} name={part.name} exercise={part.exercises} />
+      ))}
+    </>
+  );
 };
 
 const Header = ({ header }) => {
@@ -21,6 +33,7 @@ const Course = ({ course }) => {
     <>
       <Header header={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </>
   );
 };
