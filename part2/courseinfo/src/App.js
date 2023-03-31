@@ -1,8 +1,5 @@
 const Total = ({ parts }) => {
-  let total = 0;
-  parts.forEach((part) => {
-    total += part.exercises;
-  });
+  const total = parts.reduce((acc, curr) => acc + curr.exercises, 0);
   return <h3>total of {total} exercises</h3>;
 };
 
@@ -14,15 +11,13 @@ const Part = (props) => {
   );
 };
 
-const Content = ({ parts }) => {
-  return (
-    <>
-      {parts.map((part) => (
-        <Part key={part.id} name={part.name} exercise={part.exercises} />
-      ))}
-    </>
-  );
-};
+const Content = ({ parts }) => (
+  <>
+    {parts.map((part) => (
+      <Part key={part.id} name={part.name} exercise={part.exercises} />
+    ))}
+  </>
+);
 
 const Header = ({ header }) => {
   return <h1>{header}</h1>;
