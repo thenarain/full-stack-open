@@ -5,15 +5,21 @@ const Person = (props) => {
   return (
     <p>
       {props.name} {props.number}
+      <button onClick={props.deleteHandle} >delete</button>
     </p>
   );
 };
 
 const Persons = (props) => {
+  const deleteHandle = (id, name) => {
+    if(window.confirm(`Delete ${name} ?`)) {
+      contactService.remove(id).then(() => props.setPersons(props.personToShow.filter(person => person.id !== id)))
+    }
+  }
   return (
     <div>
       {props.personToShow.map((person) => (
-        <Person key={person.name} name={person.name} number={person.number} />
+        <Person key={person.name} name={person.name} number={person.number} deleteHandle={() => deleteHandle(person.id, person.name)} />
       ))}
     </div>
   );
@@ -92,7 +98,7 @@ const App = () => {
       : persons.filter((person) =>
           person.name.toLowerCase().includes(newFilter.toLowerCase())
         );
-
+  
   return (
     <div>
       <h2>Phonebook</h2>
@@ -108,7 +114,7 @@ const App = () => {
         text="add"
       />
       <h3>Numbers</h3>
-      <Persons personToShow={personToShow} />
+      <Persons personToShow={personToShow} setPersons={setPersons} />
     </div>
   );
 };
