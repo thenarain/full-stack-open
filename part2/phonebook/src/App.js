@@ -5,21 +5,32 @@ const Person = (props) => {
   return (
     <p>
       {props.name} {props.number}
-      <button onClick={props.deleteHandle} >delete</button>
+      <button onClick={props.deleteHandle}>delete</button>
     </p>
   );
 };
 
 const Persons = (props) => {
   const deleteHandle = (id, name) => {
-    if(window.confirm(`Delete ${name} ?`)) {
-      contactService.remove(id).then(() => props.setPersons(props.personToShow.filter(person => person.id !== id)))
+    if (window.confirm(`Delete ${name} ?`)) {
+      contactService
+        .remove(id)
+        .then(() =>
+          props.setPersons(
+            props.personToShow.filter((person) => person.id !== id)
+          )
+        );
     }
-  }
+  };
   return (
     <div>
       {props.personToShow.map((person) => (
-        <Person key={person.name} name={person.name} number={person.number} deleteHandle={() => deleteHandle(person.id, person.name)} />
+        <Person
+          key={person.name}
+          name={person.name}
+          number={person.number}
+          deleteHandle={() => deleteHandle(person.id, person.name)}
+        />
       ))}
     </div>
   );
@@ -58,22 +69,39 @@ const App = () => {
   const [newFilter, setNewFilter] = useState("");
 
   useEffect(() => {
-   contactService.getAll()
-   .then(initialContact => setPersons(initialContact))
-  }, [])
+    contactService
+      .getAll()
+      .then((initialContact) => setPersons(initialContact));
+  }, []);
 
   const addName = (event) => {
     event.preventDefault();
 
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (
+      persons.some((person) => person.name === newName) &&
+      window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one ?`
+      )
+    ) {
+      const contact = persons.find((person) => person.name === newName);
+      const newObj = { ...contact, number: newNumber };
+      contactService
+        .update(newObj.id, newObj)
+        .then((updatedValue) =>
+          setPersons(
+            persons.map((person) =>
+              person.id !== newObj.id ? person : updatedValue
+            )
+          )
+        );
     } else {
       const newobj = {
         name: newName,
         number: newNumber,
       };
-      contactService.create(newobj)
-      .then(returnedContact => setPersons(persons.concat(returnedContact)))
+      contactService
+        .create(newobj)
+        .then((returnedContact) => setPersons(persons.concat(returnedContact)));
     }
 
     setNewName("");
@@ -98,7 +126,7 @@ const App = () => {
       : persons.filter((person) =>
           person.name.toLowerCase().includes(newFilter.toLowerCase())
         );
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
