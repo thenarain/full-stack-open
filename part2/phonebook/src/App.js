@@ -62,17 +62,41 @@ const Filter = (props) => {
   );
 };
 
+const Notification = (props) => {
+  const messageStyle = {
+    color: "green",
+    background: "lightgrey",
+    fontSize: 20,
+    borderStyle: "solid",
+    bordeRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+  if (props.message === null) {
+    return null;
+  }
+  return <div style={messageStyle}>{props.message}</div>;
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
+  const [indicator, setIndicator] = useState(null);
 
   useEffect(() => {
     contactService
       .getAll()
       .then((initialContact) => setPersons(initialContact));
   }, []);
+
+  const showNotification = () => {
+    setIndicator(`Added ${newName}`);
+    setTimeout(() => {
+      setIndicator(null);
+    }, 1000);
+  };
 
   const addName = (event) => {
     event.preventDefault();
@@ -85,23 +109,23 @@ const App = () => {
     ) {
       const contact = persons.find((person) => person.name === newName);
       const newObj = { ...contact, number: newNumber };
-      contactService
-        .update(newObj.id, newObj)
-        .then((updatedValue) =>
-          setPersons(
-            persons.map((person) =>
-              person.id !== newObj.id ? person : updatedValue
-            )
+      contactService.update(newObj.id, newObj).then((updatedValue) => {
+        setPersons(
+          persons.map((person) =>
+            person.id !== newObj.id ? person : updatedValue
           )
         );
+        showNotification();
+      });
     } else {
       const newobj = {
         name: newName,
         number: newNumber,
       };
-      contactService
-        .create(newobj)
-        .then((returnedContact) => setPersons(persons.concat(returnedContact)));
+      contactService.create(newobj).then((returnedContact) => {
+        setPersons(persons.concat(returnedContact));
+        showNotification();
+      });
     }
 
     setNewName("");
@@ -130,6 +154,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={indicator} />
       <Filter value={newFilter} handleFilterChange={newFilterChange} />
       <h3>add a new</h3>
       <PersonForm
