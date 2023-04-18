@@ -1,3 +1,5 @@
+import Country from "./Country";
+
 const Countries = (props) => {
   return (
     <div>
@@ -7,33 +9,9 @@ const Countries = (props) => {
   );
 };
 
-const Country = (props) => {
-  const objtoArr = (object) => {
-    return Object.values(object);
-  };
-  const langArray = objtoArr(props.languages);
-  return (
-    <>
-      <h1>{props.name}</h1>
-      <div>capital {props.capital}</div>
-      <div>area {props.area}</div>
-      <div>
-        <h3>languages:</h3>
-        <ul>
-          {langArray.map((languague) => (
-            <li key={languague}>{languague}</li>
-          ))}
-        </ul>
-      </div>
-      <img src={props.flag} alt={props.alt} />
-    </>
-  );
-};
-
 const Message = (props) => {
   return <div>{props.message}</div>;
 };
-
 const CountryShow = (props) => {
   if (props.dataToShow.length > 1 && props.dataToShow.length <= 10) {
     if (props.data.length === 1) {

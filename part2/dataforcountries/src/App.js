@@ -8,14 +8,21 @@ const App = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get("https://restcountries.com/v3.1/all").then((response) => {
-      setCountries(response.data);
-    });
+    axios
+      .get("https://restcountries.com/v3.1/all")
+      .then((response) => {
+        setCountries(response.data);
+      })
+      .catch((error) => console.log(error));
   }, []);
+
+  if (!countries) {
+    return countries;
+  }
 
   const handleChange = (event) => {
     setValue(event.target.value);
-    setData([])
+    setData([]);
   };
 
   const dataToShow =
