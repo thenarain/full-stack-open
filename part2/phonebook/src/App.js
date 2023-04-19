@@ -1,63 +1,9 @@
 import { useState, useEffect } from "react";
-import contactService from "./services/contact";
-
-const Person = (props) => {
-  return (
-    <p>
-      {props.name} {props.number}
-      <button onClick={props.deleteHandle}>delete</button>
-    </p>
-  );
-};
-
-const Persons = (props) => {
-  const deleteHandle = (id, name) => {
-    if (window.confirm(`Delete ${name} ?`)) {
-      contactService
-        .remove(id)
-        .then(() =>
-          props.setPersons(
-            props.personToShow.filter((person) => person.id !== id)
-          )
-        )
-        .catch(() => {
-          props.setPersons(
-            props.personToShow.filter((person) => person.id !== id)
-          );
-          props.showError(name);
-        });
-    }
-  };
-  return (
-    <div>
-      {props.personToShow.map((person) => (
-        <Person
-          key={person.name}
-          name={person.name}
-          number={person.number}
-          deleteHandle={() => deleteHandle(person.id, person.name)}
-        />
-      ))}
-    </div>
-  );
-};
-
-const PersonForm = (props) => {
-  return (
-    <form onSubmit={props.addName}>
-      <div>
-        name: <input value={props.newName} onChange={props.handleNameChange} />
-      </div>
-      <div>
-        number:{" "}
-        <input value={props.newNumber} onChange={props.handleNumberChange} />
-      </div>
-      <div>
-        <button type={props.type}>{props.text}</button>
-      </div>
-    </form>
-  );
-};
+import contactService from "./components/services/contact";
+import Persons from "./components/Persons";
+import Notification from "./components/Notification";
+import ErrorNotification from "./components/ErrorNotification";
+import PersonForm from "./components/PersonForm";
 
 const Filter = (props) => {
   return (
@@ -68,40 +14,8 @@ const Filter = (props) => {
   );
 };
 
-const Notification = (props) => {
-  const messageStyle = {
-    color: "green",
-    background: "lightgrey",
-    fontSize: 20,
-    borderStyle: "solid",
-    bordeRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  };
-  if (props.message === null) {
-    return null;
-  }
-  return <div style={messageStyle}>{props.message}</div>;
-};
-
-const ErrorNotification = (props) => {
-  const messageStyle = {
-    color: "red",
-    background: "lightgrey",
-    fontSize: 20,
-    borderStyle: "solid",
-    bordeRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  };
-  if (props.message === null) {
-    return null;
-  }
-  return <div style={messageStyle}>{props.message}</div>;
-};
-
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState(null);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
@@ -111,8 +25,12 @@ const App = () => {
   useEffect(() => {
     contactService
       .getAll()
-      .then((initialContact) => setPersons(initialContact));
-  }, []);
+      .then((initialContact) => setPersons(initialContact)).catch(error => console.log(error))
+  }, [newName, newNumber])
+
+  if (!persons) {
+    return null
+  }
 
   const showNotification = () => {
     setIndicator(`Added ${newName}`);
