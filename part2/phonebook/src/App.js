@@ -26,7 +26,7 @@ const App = () => {
     contactService
       .getAll()
       .then((initialContact) => setPersons(initialContact)).catch(error => console.log(error))
-  }, [newName, newNumber])
+  }, [])
 
   if (!persons) {
     return null
