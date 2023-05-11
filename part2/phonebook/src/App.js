@@ -25,11 +25,12 @@ const App = () => {
   useEffect(() => {
     contactService
       .getAll()
-      .then((initialContact) => setPersons(initialContact)).catch(error => console.log(error))
-  }, [])
+      .then((initialContact) => setPersons(initialContact))
+      .catch((error) => console.log(error));
+  }, []);
 
   if (!persons) {
-    return null
+    return null;
   }
 
   const showNotification = () => {
@@ -39,13 +40,11 @@ const App = () => {
     }, 2000);
   };
 
-  const showError = (name) => {
-    setErrorMessage(
-      `Information of ${name} has already been removed from server`
-    );
+  const showError = (error) => {
+    setErrorMessage(error.response.data.error);
     setTimeout(() => {
       setErrorMessage(null);
-    }, 3000);
+    }, 5000);
   };
 
   const addName = (event) => {
@@ -69,19 +68,23 @@ const App = () => {
           );
           showNotification();
         })
-        .catch(() => {
-          setPersons(persons.filter((person) => person.id !== newObj.id));
-          showError(newObj.name);
+        .catch((error) => {
+          showError(error)
         });
     } else {
       const newobj = {
         name: newName,
         number: newNumber,
       };
-      contactService.create(newobj).then((returnedContact) => {
-        setPersons(persons.concat(returnedContact));
-        showNotification();
-      });
+      contactService
+        .create(newobj)
+        .then((returnedContact) => {
+          setPersons(persons.concat(returnedContact));
+          showNotification();
+        })
+        .catch((error) => {
+          showError(error)
+        });
     }
 
     setNewName("");
